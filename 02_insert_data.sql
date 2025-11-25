@@ -10,8 +10,10 @@ SELECT setval('optimizacion_corte_opt_corte_id_seq', 10, false);
 SELECT setval('piezas_colocadas_pieza_colocada_id_seq', 10, false);
 
 -- 1. Roles de Aplicación
-INSERT INTO roles (rol_id, nombre) VALUES (1, 'Administrador'), (2, 'Operador')
-ON CONFLICT (rol_id) DO UPDATE SET nombre = EXCLUDED.nombre;
+INSERT INTO roles (rol_id, nombre, descripcion) VALUES 
+(1, 'Administrador', 'Acceso total y configuración'), 
+(2, 'Operador', 'Registro de cortes y visualización')
+ON CONFLICT (rol_id) DO UPDATE SET nombre = EXCLUDED.nombre, descripcion = EXCLUDED.descripcion;
 
 -- 2. Materia Prima (MP) - 1000x500. Restricción de orilla: 10.0
 INSERT INTO materia_prima (materia_prima_id, numero_parte, dimension_largo, dimension_ancho, distancia_min_piezas, distancia_min_orilla)
@@ -32,3 +34,6 @@ VALUES (1, 1, 'En curso');
 -- Dispara el trigger: Utilización = 2.0%
 INSERT INTO piezas_colocadas (pieza_colocada_id, opt_corte_id, pieza_id, geometria_actual, rotacion_grados, posicion_x, posicion_y)
 VALUES (1, 1, 1, 'GEOMETRIA_INICIAL_1', 0.0, 10.0, 10.0);
+
+-- 6. Usuario de prueba (Autenticación)
+CALL sp_crear_usuario('ci_admin', 'Pass4CI!', 1);
